@@ -77,30 +77,25 @@ const family = [
 function findGrandchildren(name, familyTree) {
   let grandchildren = [];
 
-  // Шаг 1: Ищем детей Алексея и Полины
   let alexeiChildren = [];
 
   for (let person of familyTree) {
     if (person.children) {
       for (let child of person.children) {
         if (child.name === name && child.wife === "Полина") {
-          alexeiChildren = person.children; // Нашли детей Алексея и Полины
+          alexeiChildren = person.children;
         }
       }
     }
   }
 
-  // Шаг 2: Ищем детей детей Алексея (его внуков)
   for (let child of alexeiChildren) {
     for (let person of familyTree) {
       if (person.children) {
-        // Находим детей Алексея
         for (let subChild of person.children) {
           if (subChild.name === child.name && subChild.children) {
-            // Теперь ищем детей этих детей (внуков Алексея)
             for (let grandChild of subChild.children) {
               if (grandChild.children) {
-                // Добавляем внуков (детей Ларисы)
                 grandchildren.push(...grandChild.children.map(c => c.name));
               }
             }
@@ -117,4 +112,4 @@ const grandchildrenOfAlexei = findGrandchildren("Алексей", family);
 console.log(grandchildrenOfAlexei);
 
 // Найти дедушек петра
-// Нарисовать 2 дива и сделать между ними драг энд дроп (3 кнопки)
+
