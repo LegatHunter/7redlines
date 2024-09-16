@@ -3,13 +3,16 @@ const family = [
   { name: "Семен", wife: "Мария" },
   { name: "Гаврила", wife: "Оксана" },
   { name: "Дмитрий", wife: "Авдотья" },
-  { name: "Елена",
+  {
+    name: "Елена",
     children: [
       { name: "Михаил" },
       { name: "Алексей", wife: "Полина" },
-      { name: "Анастасия",
+      {
+        name: "Анастасия",
         children: [
-          { name: "Лариса",
+          {
+            name: "Лариса",
             children: [
               { name: "Григорий" },
               { name: "Светлана" },
@@ -20,7 +23,8 @@ const family = [
       },
     ],
   },
-  { name: "Мария",
+  {
+    name: "Мария",
     children: [
       { name: "Афанасий" },
       { name: "Ярослав", wife: "Анастасия" },
@@ -30,7 +34,8 @@ const family = [
       },
     ],
   },
-  { name: "Оксана",
+  {
+    name: "Оксана",
     children: [
       { name: "Валерий", wife: "Екатерина" },
       {
@@ -39,7 +44,8 @@ const family = [
       },
     ],
   },
-  { name: "Авдотья",
+  {
+    name: "Авдотья",
     children: [
       { name: "Ольга", children: [{ name: "Савелий" }, { name: "Марина" }] },
     ],
@@ -49,6 +55,8 @@ const family = [
 // Нужно найти имена Григорий, Светлана, Анна имея во входных данных только имя Алексей
 
 // Найти внуков Алексея
+
+// ИЗНАЧАЛЬНАЯ ВЕРСИЯ
 
 // function findA (family) {
 //   for (let pers of family) {
@@ -68,17 +76,21 @@ const family = [
 
 // console.log(findA(family))
 
+
+// РЕКУРСИВНАЯ ВЕРСИЯ
+
 function searchWife(name, family) {
   let wifeName;
   let child;
   for (let person of family) {
     if (person.name === name) {
       wifeName = person.wife;
-      if(person.name === wifeName && person.children) {
-        child = person.children;
-        return child
-      }
-      else if (person.children) {
+      searchWife(wifeName, family);
+
+      if (person.name === wifeName && person.children) {
+        console.log("asdasdasd");
+        return person.children;
+      } else if (person.children) {
         const result = searchWife(wifeName, person.children);
         if (result) {
           return result;
@@ -86,36 +98,36 @@ function searchWife(name, family) {
       }
       // return wifeName;
     } else if (person.children) {
-        const result = searchWife(name, person.children);
-        if (result) {
-          return result;
-        }
-      }
-  }
-  return null
-}
-
-function searchChildren(name, family) {
-  const children = [];
-  for (let person of family) {
-    if (person.name === name && person.children) {
-      return children;
-    } else if (person.children) {
-        const result = searchChildren(name, person.children);
-        if (result) {
-          return result;
-        }
+      const result = searchWife(name, person.children);
+      if (result) {
+        return result;
       }
     }
   }
+  return null;
+}
+
+// function searchChildren(name, family) {
+//   const children = [];
+//   for (let person of family) {
+//     if (person.name === name && person.children) {
+//       return children;
+//     } else if (person.children) {
+//         const result = searchChildren(name, person.children);
+//         if (result) {
+//           return result;
+//         }
+//       }
+//     }
+//   }
 
 const wife = searchWife("Алексей", family);
-const children = searchChildren(wife, family);
+// const children = searchChildren(wife, family);
 console.log(wife);
-console.log(children);
+// console.log(children);
 
 
-
+// РАБОЧАЯ ВЕРСИЯ
 
 // function findGrandchildren(name, familyTree) {
 //   let grandchildren = [];
