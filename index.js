@@ -3,16 +3,13 @@ const family = [
   { name: "Семен", wife: "Мария" },
   { name: "Гаврила", wife: "Оксана" },
   { name: "Дмитрий", wife: "Авдотья" },
-  {
-    name: "Елена",
+  { name: "Елена",
     children: [
       { name: "Михаил" },
       { name: "Алексей", wife: "Полина" },
-      {
-        name: "Анастасия",
+      { name: "Анастасия",
         children: [
-          {
-            name: "Лариса",
+          { name: "Лариса",
             children: [
               { name: "Григорий" },
               { name: "Светлана" },
@@ -23,8 +20,7 @@ const family = [
       },
     ],
   },
-  {
-    name: "Мария",
+  { name: "Мария",
     children: [
       { name: "Афанасий" },
       { name: "Ярослав", wife: "Анастасия" },
@@ -34,8 +30,7 @@ const family = [
       },
     ],
   },
-  {
-    name: "Оксана",
+  { name: "Оксана",
     children: [
       { name: "Валерий", wife: "Екатерина" },
       {
@@ -44,8 +39,7 @@ const family = [
       },
     ],
   },
-  {
-    name: "Авдотья",
+  { name: "Авдотья",
     children: [
       { name: "Ольга", children: [{ name: "Савелий" }, { name: "Марина" }] },
     ],
@@ -56,110 +50,72 @@ const family = [
 
 // Найти внуков Алексея
 
-// function findGrandchildren(family, name) {
+// function findA (family) {
 //   for (let pers of family) {
-//     if (pers.name === name) {
-//       return pers.name;
-//     } else {
-//       if (pers.children) {
-//         findGrandchildren(pers.children);
+//       if (pers.name === 'Алексей'){
+//           return pers.name
 //       }
-//       if (pers.wife && pers.wife.children) {
-//         return findGrandchildren(pers.wife.children);
+//      else {
+//           if (pers.children) {
+//               return findA(pers.children)
+//           }
+//           if (pers.wife && pers.wife.children) {
+//               return findA(pers.wife.children)
+//           }
 //       }
-//     }
 //   }
 // }
 
-// console.log(findGrandchildren(family, "Алексей"));
+// console.log(findA(family))
 
-function grandchildren(family) {
-  const alex = "Алексей";
+function searchWife(name, family) {
+  let wifeName;
+  let child;
   for (let person of family) {
-    if (person.name === alex) {
-      const polina = person.wife;
-      for (let wife of family) {
-        if (wife.name === polina && wife.children) {
-          return person.children ? person.children : []
+    if (person.name === name) {
+      wifeName = person.wife;
+      if(person.name === wifeName && person.children) {
+        child = person.children;
+        return child
+      }
+      else if (person.children) {
+        const result = searchWife(wifeName, person.children);
+        if (result) {
+          return result;
         }
       }
-      return person.wife;
-    } else {
-      if (person.children) {
-        return grandchildren(person.children);
+      // return wifeName;
+    } else if (person.children) {
+        const result = searchWife(name, person.children);
+        if (result) {
+          return result;
+        }
       }
-    }
   }
+  return null
 }
 
-console.log(grandchildren(family));
-
-
-
-function findChildrenByName(name) {
-  let result = [];
-
-  function searchFamily(familyArray) {
-    for (const person of familyArray) {
-      if (person.name === name) {
-        return person;
-      }
-      if (person.children) {
-        const found = searchFamily(person.children);
-        if (found) {
-          return found;
+function searchChildren(name, family) {
+  const children = [];
+  for (let person of family) {
+    if (person.name === name && person.children) {
+      return children;
+    } else if (person.children) {
+        const result = searchChildren(name, person.children);
+        if (result) {
+          return result;
         }
       }
     }
-    return null;
   }
 
-  return searchFamily(family);
-}
+const wife = searchWife("Алексей", family);
+const children = searchChildren(wife, family);
+console.log(wife);
+console.log(children);
 
-function getChildrenOfWife(name) {
-  const alexey = findChildrenByName("Алексей");
 
-  if (!alexey || !alexey.wife) {
-    console.log("Имя Алексей не найдено или у него нет жены.");
-    return;
-  }
 
-  const wifeName = alexey.wife;
-  const wife = findChildrenByName(wifeName);
-
-  if (!wife || !wife.children) {
-    console.log("Имя жены не найдено или у нее нет детей.");
-    return;
-  }
-
-  const wifeChildren = wife.children;
-
-  let larisaName = null;
-  for (const child of wifeChildren) {
-    if (child.wife) {
-      larisaName = child.wife;
-      break;
-    }
-  }
-
-  if (!larisaName) {
-    console.log("У жены нет супруга.");
-    return;
-  }
-
-  const larisa = findChildrenByName(larisaName);
-
-  if (!larisa || !larisa.children) {
-    console.log("Имя супруга жены не найдено или у него нет детей.");
-    return;
-  }
-
-  const finalChildren = larisa.children.map(child => child.name);
-  console.log("Имена детей:", finalChildren);
-}
-
-getChildrenOfWife();
 
 // function findGrandchildren(name, familyTree) {
 //   let grandchildren = [];
