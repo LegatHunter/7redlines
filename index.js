@@ -68,51 +68,33 @@ const family = [
 
 // console.log(findA(family))
 
-function searchWife(name, family) {
-  let wifeName;
-  let child;
-  for (let person of family) {
-    if (person.name === name) {
-      wifeName = person.wife;
-      if(person.name === wifeName && person.children) {
-        child = person.children;
-        return child
-      }
-      else if (person.children) {
-        const result = searchWife(wifeName, person.children);
-        if (result) {
-          return result;
-        }
-      }
-      // return wifeName;
-    } else if (person.children) {
-        const result = searchWife(name, person.children);
-        if (result) {
-          return result;
-        }
-      }
-  }
-  return null
-}
+const findGrandchildren = (familyTree, name) => {
+  let grandchildren = [];
 
-function searchChildren(name, family) {
-  const children = [];
-  for (let person of family) {
+  const findChildren = (person) => {
     if (person.name === name && person.children) {
-      return children;
-    } else if (person.children) {
-        const result = searchChildren(name, person.children);
-        if (result) {
-          return result;
+      for (const child of person.children) {
+        if (child.children) {
+          grandchildren.push(...child.children.map((grandchild) => grandchild.name));
         }
       }
     }
+
+    if (person.children) {
+      for (const child of person.children) {
+        findChildren(child);
+      }
+    }
+  };
+
+  for (const member of familyTree) {
+    findChildren(member);
   }
 
-const wife = searchWife("Алексей", family);
-const children = searchChildren(wife, family);
-console.log(wife);
-console.log(children);
+  return grandchildren;
+};
+
+console.log(findGrandchildren(family, 'Алексей'));
 
 
 
